@@ -1,6 +1,7 @@
 package com.example.finalproject.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
@@ -45,20 +47,43 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         TaskModel task = taskList.get(position);
 
-        holder.taskName.setText(task.getTitle()); // Gunakan getTitle()
-        holder.taskDesc.setText(task.getDescription()); // Tampilkan deskripsi jika ada
+        holder.taskName.setText(task.getTitle());
+
+        // Tampilkan Due Date
+        if (task.getDueDate() != null && !task.getDueDate().isEmpty()) {
+            holder.dueDate.setText("Due: " + task.getDueDate());
+        } else {
+            holder.dueDate.setText("No Date");
+        }
+
+        // Tampilkan Priority
+        if (task.getPriority() != null) {
+            holder.priority.setText(task.getPriority());
+            // Ubah warna badge berdasarkan priority (Opsional)
+            if (task.getPriority().equalsIgnoreCase("High")) {
+                holder.priorityBadge.setCardBackgroundColor(Color.parseColor("#E05435")); // Merah
+            } else {
+                holder.priorityBadge.setCardBackgroundColor(Color.parseColor("#2AB3A3")); // Hijau
+            }
+        }
+
+        // Tampilkan Points
+        holder.points.setText(String.valueOf(task.getPoints()));
+
+        // Status Selesai
+        holder.taskDone.setOnCheckedChangeListener(null); // Hindari trigger saat scroll
         holder.taskDone.setChecked(task.getIsDone() == 1);
 
-        // Tombol Edit & Delete
-        // Kita cek null dulu biar aman kalau listener belum dipasang
         holder.btnEdit.setOnClickListener(v -> {
             if (listener != null) listener.onEdit(task);
         });
+
         holder.btnDelete.setOnClickListener(v -> {
             if (listener != null) listener.onDelete(task);
         });
-        holder.taskDone.setOnCheckedChangeListener((button, checked) -> {
-            if (listener != null) listener.onChecked(task, checked);
+
+        holder.taskDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (listener != null) listener.onChecked(task, isChecked);
         });
     }
 
@@ -68,19 +93,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-
-        TextView taskName, taskDesc;
+        TextView taskName, dueDate, priority, points;
         CheckBox taskDone;
         Button btnEdit, btnDelete;
+        CardView priorityBadge;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-
             taskName = itemView.findViewById(R.id.textViewTaskName);
-            taskDesc = itemView.findViewById(R.id.textViewDueDate); // Sementara pakai ID ini untuk deskripsi
+            dueDate = itemView.findViewById(R.id.textViewDueDate);
+            priority = itemView.findViewById(R.id.textViewPriority);
+            points = itemView.findViewById(R.id.textViewPoints);
             taskDone = itemView.findViewById(R.id.checkBoxIsDone);
             btnEdit = itemView.findViewById(R.id.btnEditTask);
             btnDelete = itemView.findViewById(R.id.btnDeleteTask);
+            priorityBadge = itemView.findViewById(R.id.cardPriorityBadge);
         }
     }
 }

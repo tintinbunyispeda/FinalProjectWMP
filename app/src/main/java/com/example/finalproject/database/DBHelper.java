@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TASKS (Firebase mode: table ini tidak dipakai, tapi dibiarkan biar gak error)
+        // TASKS (Firebase mode: table ini tidak dipakai, tapi dibiarkan biar gak error jika ada kode legacy)
         db.execSQL("CREATE TABLE " + TABLE_TASK + " (id INTEGER PRIMARY KEY, title TEXT)");
 
         // EVENTS
@@ -46,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "date TEXT, " +
                 "duration INTEGER)");
 
-        // SPLIT BILL (Updated: tambah description & date)
+        // SPLIT BILL
         db.execSQL("CREATE TABLE " + TABLE_SPLIT_BILL + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "description TEXT, " +
@@ -81,6 +81,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM " + TABLE_EVENT, null);
     }
 
+    // [BARU] Fungsi untuk menghapus Event berdasarkan ID
+    public boolean deleteEvent(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_EVENT, "id=?", new String[]{String.valueOf(id)}) > 0;
+    }
+
     // -------------------- LEADERBOARD --------------------
     public void addScore(String username, int score) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -110,7 +116,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // -------------------- SPLIT BILL --------------------
-    // Updated: Terima deskripsi & date
     public boolean addSplitBill(String desc, String date, double total, int persons, double each) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

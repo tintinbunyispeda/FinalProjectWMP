@@ -2,23 +2,25 @@ package com.example.finalproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.view.View; // Import View
+import android.widget.LinearLayout; // Import LinearLayout
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button btnTodo, btnEvent, btnPomodoro, btnScreenTime, btnLeaderboard, btnSplitBill;
+    // CHANGED: Defined as View or LinearLayout, NOT Button
+    View btnTodo, btnEvent, btnPomodoro, btnScreenTime, btnLeaderboard, btnSplitBill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // --- PERBAIKAN ID ---
-        btnTodo = findViewById(R.id.btnTodoList);       // XML: btnTodoList
-        btnEvent = findViewById(R.id.btnEvents);        // XML: btnEvents
+        // These IDs point to <LinearLayout> tags in your XML, so we can't cast them to (Button)
+        btnTodo = findViewById(R.id.btnTodoList);
+        btnEvent = findViewById(R.id.btnEvents);
         btnPomodoro = findViewById(R.id.btnPomodoro);
         btnScreenTime = findViewById(R.id.btnScreenTime);
         btnLeaderboard = findViewById(R.id.btnLeaderboard);

@@ -2,7 +2,7 @@ package com.example.finalproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.finalproject.R;
 import com.example.finalproject.adapters.TaskAdapter;
 import com.example.finalproject.models.TaskModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 public class TaskListActivity extends AppCompatActivity {
 
     RecyclerView rvTasks;
-    Button btnAdd;
+    FloatingActionButton btnAdd;
     FirebaseFirestore db;
     ArrayList<TaskModel> list;
     TaskAdapter adapter;
@@ -28,19 +29,44 @@ public class TaskListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
 
-        rvTasks = findViewById(R.id.recyclerViewTasks); // Pastikan ID ini sesuai xml (kadang rvTasks/recyclerViewTasks)
-        btnAdd = findViewById(R.id.btnAddTask);
+        rvTasks = findViewById(R.id.recyclerViewTasks);
+        btnAdd = findViewById(R.id.fabAddTask);
 
         db = FirebaseFirestore.getInstance();
         list = new ArrayList<>();
 
-        // Setup RecyclerView
-        // Note: Kita kasih 'null' dulu ke listener karena belum kita bahas fitur edit/hapus di tahap ini
-        adapter = new TaskAdapter(this, list, null);
+        // Implementasi Listener untuk Edit dan Delete
+        adapter = new TaskAdapter(this, list, new TaskAdapter.OnTaskClickListener() {
+            @Override
+            public void onEdit(TaskModel task) {
+                Intent intent = new Intent(TaskListActivity.this, AddTaskActivity.class);
+                intent.putExtra("taskId", task.getId());
+                intent.putExtra("title", task.getTitle());
+                intent.putExtra("points", task.getPoints());
+                intent.putExtra("dueDate", task.getDueDate());
+                intent.putExtra("priority", task.getPriority());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onDelete(TaskModel task) {
+                db.collection("tasks").document(task.getId())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> Toast.makeText(TaskListActivity.this, "Task Deleted", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(TaskListActivity.this, "Error deleting", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onChecked(TaskModel task, boolean isChecked) {
+                // Opsional: Update status selesai ke Firebase
+                db.collection("tasks").document(task.getId())
+                        .update("isDone", isChecked ? 1 : 0);
+            }
+        });
+
         rvTasks.setLayoutManager(new LinearLayoutManager(this));
         rvTasks.setAdapter(adapter);
 
-        // Panggil fungsi untuk memantau data Firebase
         listenToFirebase();
 
         btnAdd.setOnClickListener(v ->
@@ -48,21 +74,19 @@ public class TaskListActivity extends AppCompatActivity {
     }
 
     private void listenToFirebase() {
-        // Ini akan berjalan otomatis setiap ada perubahan data di Cloud
         db.collection("tasks")
                 .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        return;
-                    }
+                    if (error != null) return;
 
                     list.clear();
-                    for (QueryDocumentSnapshot doc : value) {
-                        // Mengubah data JSON firebase jadi Java Object
-                        TaskModel task = doc.toObject(TaskModel.class);
-                        task.setId(doc.getId()); // Simpan ID dokumennya
-                        list.add(task);
+                    if (value != null) {
+                        for (QueryDocumentSnapshot doc : value) {
+                            TaskModel task = doc.toObject(TaskModel.class);
+                            task.setId(doc.getId());
+                            list.add(task);
+                        }
+                        adapter.notifyDataSetChanged();
                     }
-                    adapter.notifyDataSetChanged();
                 });
     }
 }
