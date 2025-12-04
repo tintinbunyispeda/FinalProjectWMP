@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Core palette inspired by the logo -->
+    <color name="colorTomato">#FF6B4A</color>        <!-- Tomato body -->
+    <color name="colorTomatoDark">#E05435</color>   <!-- Darker for pressed states -->
+    <color name="colorLeaf">#2AB3A3</color>         <!-- Green leaf / accent -->
+    <color name="colorBackground">#FFF9F5</color>   <!-- Warm off‑white background -->
+    <color name="colorSurface">#FFFFFFFF</color>    <!-- Card / surface white -->
+    <color name="colorTextPrimary">#222222</color>
+    <color name="colorTextSecondary">#666666</color>
+
+    <!-- Legacy names used by some widgets -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
+
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
