@@ -4,30 +4,262 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".activities.LeaderboardActivity">
 
-    <TextView
-        android:id="@+id/textViewLeaderboardTitle"
-        android:layout_width="wrap_content"
+    <!-- Header Card with Trophy Design -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardHeader"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Leaderboard"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        app:cardBackgroundColor="@color/colorSurface"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🏆"
+                android:textSize="48sp" />
+
+            <TextView
+                android:id="@+id/textViewLeaderboardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Leaderboard"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTextPrimary"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Top performers this month"
+                android:textSize="14sp"
+                android:textColor="@color/colorTextSecondary" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Top 3 Podium Section -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPodium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/colorSurface"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardHeader">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:gravity="center"
+            android:baselineAligned="false">
+
+            <!-- 2nd Place -->
+            <LinearLayout
+                android:id="@+id/layoutSecondPlace"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🥈"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/textViewSecondName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Player 2"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTextPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/textViewSecondPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="0 pts"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorTextSecondary" />
+            </LinearLayout>
+
+            <!-- 1st Place (Center, Larger) -->
+            <LinearLayout
+                android:id="@+id/layoutFirstPlace"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp"
+                android:background="@color/colorBackground"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🥇"
+                    android:textSize="48sp" />
+
+                <TextView
+                    android:id="@+id/textViewFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Player 1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTomato"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/textViewFirstPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="0 pts"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 3rd Place -->
+            <LinearLayout
+                android:id="@+id/layoutThirdPlace"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🥉"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:id="@+id/textViewThirdName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Player 3"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTextPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/textViewThirdPoints"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="0 pts"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorTextSecondary" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Rest of Rankings Label -->
+    <TextView
+        android:id="@+id/textViewOthersLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Other Rankings"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorTextPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardPodium" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyStateLeaderboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOthersLabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏆"
+            android:textSize="72sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="No Rankings Yet"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Complete tasks to earn points and climb the leaderboard!"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextSecondary"
+            android:gravity="center"
+            android:paddingHorizontal="32dp" />
+    </LinearLayout>
+
+    <!-- RecyclerView for Rankings Below Top 3 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewLeaderboard"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLeaderboardTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewOthersLabel"
+        tools:listitem="@layout/item_leaderboard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
