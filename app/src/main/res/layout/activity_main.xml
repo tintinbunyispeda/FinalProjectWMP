@@ -1,82 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".activities.MainActivity">
+    android:background="@color/colorBackground"
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Productivity App"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="24dp"
+        tools:context=".activities.MainActivity">
 
-    <Button
-        android:id="@+id/btnPomodoro"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Pomodoro Timer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="384dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="App Logo"
+            android:src="@mipmap/ic_launcher_foreground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnTodoList"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="To-Do List"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPomodoro" />
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Productivity Hub"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
 
-    <Button
-        android:id="@+id/btnEvents"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Events Calendar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnTodoList" />
+        <TextView
+            android:id="@+id/textViewSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Stay focused, stay organized"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-    <Button
-        android:id="@+id/btnLeaderboard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Leaderboard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnEvents" />
+        <!-- Feature Buttons Grid -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardPomodoro"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/colorTomato"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardTodoList"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSubtitle">
 
-    <Button
-        android:id="@+id/btnScreenTime"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Screen Time Tracker"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLeaderboard" />
+            <LinearLayout
+                android:id="@+id/btnPomodoro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
-    <Button
-        android:id="@+id/btnSplitBill"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Split Bill Calculator"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnScreenTime" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🍅"
+                    android:textSize="36sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Pomodoro"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardTodoList"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="8dp"
+            app:cardBackgroundColor="@color/colorLeaf"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardPomodoro"
+            app:layout_constraintTop_toTopOf="@+id/cardPomodoro">
+
+            <LinearLayout
+                android:id="@+id/btnTodoList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✓"
+                    android:textSize="36sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Tasks"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardEvents"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/colorLeaf"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardLeaderboard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardPomodoro">
+
+            <LinearLayout
+                android:id="@+id/btnEvents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📅"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Events"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardLeaderboard"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="8dp"
+            app:cardBackgroundColor="@color/colorTomato"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardEvents"
+            app:layout_constraintTop_toTopOf="@+id/cardEvents">
+
+            <LinearLayout
+                android:id="@+id/btnLeaderboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏆"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Leaderboard"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardScreenTime"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="@color/colorTomato"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardSplitBill"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardEvents">
+
+            <LinearLayout
+                android:id="@+id/btnScreenTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏱️"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Screen Time"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardSplitBill"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_marginStart="8dp"
+            app:cardBackgroundColor="@color/colorLeaf"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cardScreenTime"
+            app:layout_constraintTop_toTopOf="@+id/cardScreenTime">
+
+            <LinearLayout
+                android:id="@+id/btnSplitBill"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💰"
+                    android:textSize="36sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Split Bill"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
