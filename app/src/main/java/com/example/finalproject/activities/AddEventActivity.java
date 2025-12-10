@@ -9,33 +9,37 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.finalproject.R;
-import com.example.finalproject.database.DBHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddEventActivity extends AppCompatActivity {
 
     private EditText editTextEventName, editTextEventDate, editTextNotes;
     private Button btnSaveEvent;
-    private DBHelper dbHelper;
+
+    // Changed from DBHelper to Firebase
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-        dbHelper = new DBHelper(this);
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
-        // Pastikan ID ini sesuai dengan activity_add_event.xml kamu
         editTextEventName = findViewById(R.id.editTextEventName);
         editTextEventDate = findViewById(R.id.editTextEventDate);
         editTextNotes = findViewById(R.id.editTextNotes);
         btnSaveEvent = findViewById(R.id.btnSaveEvent);
 
-        // Date Picker for Event Date
         editTextEventDate.setOnClickListener(v -> showDatePicker());
 
-        // Save Button listener
         btnSaveEvent.setOnClickListener(v -> saveEvent());
     }
 
@@ -45,16 +49,10 @@ public class AddEventActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dp = new DatePickerDialog(
-                this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Format tanggal sederhana: dd/MM/yyyy
-                    String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                    editTextEventDate.setText(date);
-                },
-                year, month, day
-        );
-        dp.show();
+        new DatePickerDialog(this, (view, y, m, d) -> {
+            String date = d + "/" + (m + 1) + "/" + y;
+            editTextEventDate.setText(date);
+        }, year, month, day).show();
     }
 
     private void saveEvent() {
@@ -63,18 +61,28 @@ public class AddEventActivity extends AppCompatActivity {
         String notes = editTextNotes.getText().toString().trim();
 
         if (name.isEmpty() || date.isEmpty()) {
-            Toast.makeText(this, "Event name and date cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Panggil fungsi insertEvent dari DBHelper (pastikan di DBHelper namanya insertEvent ya)
-        boolean inserted = dbHelper.insertEvent(name, date, notes);
+        if (auth.getCurrentUser() == null) return;
+        String userId = auth.getCurrentUser().getUid();
 
-        if (inserted) {
-            Toast.makeText(this, "Event saved!", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Failed to save event", Toast.LENGTH_SHORT).show();
-        }
+        // Create Event Map
+        Map<String, Object> event = new HashMap<>();
+        event.put("userId", userId); // User Specific
+        event.put("eventName", name);
+        event.put("eventDate", date);
+        event.put("notes", notes);
+
+        // Save to Firestore "events" collection
+        db.collection("events")
+                .add(event)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Event Saved to Cloud!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

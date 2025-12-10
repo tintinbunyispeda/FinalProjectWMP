@@ -1,7 +1,6 @@
 package com.example.finalproject.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.finalproject.R;
 import com.example.finalproject.adapters.EventAdapter;
-import com.example.finalproject.database.DBHelper;
 import com.example.finalproject.models.EventModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,10 @@ public class EventListActivity extends AppCompatActivity {
     TextView tvCount;
     LinearLayout emptyState;
 
-    DBHelper db;
+    // Changed to Firebase
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+
     ArrayList<EventModel> list;
     EventAdapter adapter;
 
@@ -41,36 +45,29 @@ public class EventListActivity extends AppCompatActivity {
         tvCount = findViewById(R.id.textViewEventCount);
         emptyState = findViewById(R.id.emptyStateEvents);
 
-        db = new DBHelper(this);
+        db = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
         list = new ArrayList<>();
 
-        // Setup Adapter dengan Listener (Hapus & Edit)
         adapter = new EventAdapter(this, list, new EventAdapter.OnEventClickListener() {
             @Override
             public void onEdit(EventModel event) {
-                // Untuk Edit, kita perlu buat logic update di DBHelper nanti
-                // Sementara tampilkan Toast dulu
-                Toast.makeText(EventListActivity.this, "Edit feature coming soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventListActivity.this, "Edit coming soon", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDelete(EventModel event) {
-                // Hapus dari Database
-                boolean deleted = db.deleteEvent(event.getId());
-                if (deleted) {
-                    Toast.makeText(EventListActivity.this, "Event deleted", Toast.LENGTH_SHORT).show();
-                    loadEvents(); // Refresh list
-                } else {
-                    Toast.makeText(EventListActivity.this, "Failed to delete", Toast.LENGTH_SHORT).show();
-                }
+                // Delete from Firestore
+                db.collection("events").document(event.getId())
+                        .delete()
+                        .addOnSuccessListener(aVoid -> Toast.makeText(EventListActivity.this, "Event deleted", Toast.LENGTH_SHORT).show());
             }
         });
 
         rvEvents.setLayoutManager(new LinearLayoutManager(this));
         rvEvents.setAdapter(adapter);
 
-        // Load data awal
-        loadEvents();
+        listenToEvents();
 
         if (btnAddEvent != null) {
             btnAddEvent.setOnClickListener(v ->
@@ -78,31 +75,27 @@ public class EventListActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadEvents();
-    }
+    private void listenToEvents() {
+        if (auth.getCurrentUser() == null) return;
+        String userId = auth.getCurrentUser().getUid();
 
-    private void loadEvents() {
-        list.clear();
-        Cursor c = db.getAllEvents();
+        // Listen for real-time updates from Firestore filtered by User ID
+        db.collection("events")
+                .whereEqualTo("userId", userId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
 
-        if (c != null) {
-            while (c.moveToNext()) {
-                // Pastikan urutan kolom sesuai DBHelper (id, eventName, eventDate, notes)
-                list.add(new EventModel(
-                        c.getInt(0),
-                        c.getString(1),
-                        c.getString(2),
-                        c.getString(3)
-                ));
-            }
-            c.close(); // Tutup cursor agar hemat memori
-        }
-
-        adapter.notifyDataSetChanged();
-        updateUI();
+                    list.clear();
+                    if (value != null) {
+                        for (QueryDocumentSnapshot doc : value) {
+                            EventModel event = doc.toObject(EventModel.class);
+                            event.setId(doc.getId()); // Set String ID
+                            list.add(event);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    updateUI();
+                });
     }
 
     private void updateUI() {

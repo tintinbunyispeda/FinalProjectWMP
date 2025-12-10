@@ -13,12 +13,11 @@
         android:padding="24dp"
         tools:context=".activities.AddTaskActivity">
 
-        <!-- Header -->
         <TextView
             android:id="@+id/textViewHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="✓ Add New Task"
+            android:text="📝 Add New Task"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/colorTextPrimary"
@@ -36,7 +35,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewHeader" />
 
-        <!-- Task Name Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardTaskName"
             android:layout_width="0dp"
@@ -78,7 +76,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Due Date Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardDueDate"
             android:layout_width="0dp"
@@ -101,7 +98,7 @@
                     android:id="@+id/textViewDueDateLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📅 Due Date"
+                    android:text="🗓️ Due Date"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorTextSecondary" />
@@ -123,17 +120,15 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Priority and Points Row -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPriority"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
             app:cardBackgroundColor="@color/colorSurface"
             app:cardCornerRadius="12dp"
             app:cardElevation="2dp"
-            app:layout_constraintEnd_toStartOf="@+id/cardPoints"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardDueDate">
 
@@ -147,7 +142,7 @@
                     android:id="@+id/textViewPriorityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔥 Priority"
+                    android:text="🔥 Priority (Determines Points)"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorTextSecondary" />
@@ -158,75 +153,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:padding="8dp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardPoints"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:cardBackgroundColor="@color/colorSurface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cardPriority"
-            app:layout_constraintTop_toTopOf="@+id/cardPriority">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/textViewPointsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⭐ Points"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextSecondary" />
-
-                <EditText
-                    android:id="@+id/editTextPoints"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:background="@android:color/transparent"
-                    android:padding="8dp" />
+                    android:text="High: 100pts | Medium: 50pts | Low: 20pts"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorLeaf"
+                    android:layout_marginTop="4dp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Completion Status Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardCompletion"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@color/colorSurface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardPriority">
-
-            <CheckBox
-                android:id="@+id/checkBoxIsDone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Mark as completed"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="16sp"
-                android:buttonTint="@color/colorLeaf" />
-        </androidx.cardview.widget.CardView>
-
-        <!-- Save Button -->
         <Button
             android:id="@+id/btnSaveTask"
             android:layout_width="0dp"
@@ -240,7 +177,7 @@
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardCompletion" />
+            app:layout_constraintTop_toBottomOf="@+id/cardPriority" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

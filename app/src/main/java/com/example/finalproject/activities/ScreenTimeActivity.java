@@ -1,96 +1,163 @@
 package com.example.finalproject.activities;
 
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import com.example.finalproject.R;
-import com.example.finalproject.adapters.ScreenTimeAdapter;
-import com.example.finalproject.database.DBHelper;
-import com.example.finalproject.models.ScreenTimeModel;
+import com.example.finalproject.utils.GamificationManager;
 
 public class ScreenTimeActivity extends AppCompatActivity {
 
     Chronometer chronometer;
     Button btnStart, btnStop;
-    RecyclerView rvHistory;
 
-    DBHelper db;
-    long pauseOffset;
-    boolean running = false;
+    boolean isRunning = false;
+    long pauseOffset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_time);
 
-        // ID ini sekarang SUDAH ADA di XML baru kamu
         chronometer = findViewById(R.id.chronometer);
         btnStart = findViewById(R.id.btnStartScreen);
         btnStop = findViewById(R.id.btnStopScreen);
 
-        // Perbaikan ID RecyclerView (sesuai XML)
-        rvHistory = findViewById(R.id.recyclerViewScreenTime);
+        // Initial State
+        btnStop.setEnabled(false);
 
-        db = new DBHelper(this);
-
-        btnStart.setOnClickListener(v -> startTimer());
-        btnStop.setOnClickListener(v -> stopTimer());
-
-        loadHistory();
+        btnStart.setOnClickListener(v -> startFocusSession());
+        btnStop.setOnClickListener(v -> stopFocusSession(true));
     }
 
-    private void startTimer() {
-        if (!running) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs = getSharedPreferences("focus_prefs", MODE_PRIVATE);
+        boolean violation = prefs.getBoolean("strictViolation", false);
+        boolean wasRunning = prefs.getBoolean("timerRunning", false);
+        long savedBase = prefs.getLong("chronometerBase", 0);
+
+        if (violation) {
+            // HUKUMAN: Jika user kabur saat layar menyala
+            new AlertDialog.Builder(this)
+                    .setTitle("Session Failed! ❌")
+                    .setMessage("You left the app while the timer was running. No points or time were saved.")
+                    .setPositiveButton("I promise to focus", (dialog, which) -> resetTimer())
+                    .setCancelable(false)
+                    .show();
+
+            // Reset violation flag
+            prefs.edit().putBoolean("strictViolation", false).apply();
+        } else if (wasRunning) {
+            // AMAN: User kembali dari layar mati (atau tidak melanggar)
+            // Lanjutkan timer dari waktu yang sudah berjalan
+            // SystemClock terus berjalan saat layar mati, jadi hitungannya otomatis akurat
+            chronometer.setBase(savedBase);
+            chronometer.start();
+            isRunning = true;
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // LOGIKA PENTING: Cek apakah layar mati atau user keluar app
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+        boolean isScreenOn = pm.isInteractive(); // true jika layar menyala
+
+        SharedPreferences prefs = getSharedPreferences("focus_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        if (isRunning) {
+            if (isScreenOn) {
+                // KASUS 1: Layar NYALA tapi onStop dipanggil
+                // Artinya user tekan HOME/BACK atau pindah aplikasi -> CURANG!
+                editor.putBoolean("strictViolation", true);
+
+                // Matikan sesi
+                isRunning = false;
+                chronometer.stop();
+            } else {
+                // KASUS 2: Layar MATI (User tekan tombol Power)
+                // Artinya user mau fokus -> AMAN!
+                // Biarkan isRunning = true agar pas balik (onStart) timer lanjut
+
+                // Kita stop visualnya saja biar hemat resource,
+                // tapi base time-nya tetap kita simpan.
+                chronometer.stop();
+            }
+        }
+
+        // Simpan data state terakhir
+        editor.putBoolean("timerRunning", isRunning);
+        editor.putLong("chronometerBase", chronometer.getBase());
+        editor.apply();
+    }
+
+    private void startFocusSession() {
+        if (!isRunning) {
+            // Set waktu mulai ke "Sekarang"
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
-            running = true;
+            isRunning = true;
+
+            btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
+            Toast.makeText(this, "Focus Mode ON! You can turn off screen, but don't exit app!", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void stopTimer() {
-        if (running) {
+    private void stopFocusSession(boolean isSuccess) {
+        if (isRunning) {
             chronometer.stop();
-            long elapsed = SystemClock.elapsedRealtime() - chronometer.getBase();
-            int seconds = (int) (elapsed / 1000);
+            // Hitung durasi dalam menit
+            long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
+            long elapsedMinutes = elapsedMillis / 60000;
 
-            // Simpan tanggal hari ini
-            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            if (isSuccess) {
+                // Minimal 1 menit baru dihitung
+                if (elapsedMinutes >= 1) {
+                    // 1. Simpan Total Waktu ke Leaderboard (Firestore)
+                    GamificationManager.addFocusTime(elapsedMinutes);
 
-            // Simpan ke SQLite (DBHelper)
-            db.addScreenTime(date, seconds);
+                    // 2. Beri Poin (2 poin per menit)
+                    int pointsEarned = (int) (elapsedMinutes * 2);
+                    GamificationManager.addPoints(pointsEarned);
 
-            pauseOffset = 0;
-            running = false;
+                    Toast.makeText(this, "Great job! " + elapsedMinutes + " mins recorded.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Session too short to record (< 1 min).", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-            loadHistory();
+            resetTimer();
         }
     }
 
-    private void loadHistory() {
-        ArrayList<ScreenTimeModel> list = new ArrayList<>();
-        Cursor c = db.getScreenTime();
+    private void resetTimer() {
+        chronometer.stop();
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+        isRunning = false;
 
-        while (c.moveToNext()) {
-            list.add(new ScreenTimeModel(
-                    c.getInt(0),
-                    c.getString(1),
-                    c.getInt(2)
-            ));
-        }
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
 
-        rvHistory.setLayoutManager(new LinearLayoutManager(this));
-        rvHistory.setAdapter(new ScreenTimeAdapter(this, list));
+        // Bersihkan SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("focus_prefs", MODE_PRIVATE);
+        prefs.edit().clear().apply();
     }
 }

@@ -13,7 +13,6 @@
         android:padding="24dp"
         tools:context=".activities.PomodoroActivity">
 
-        <!-- Header -->
         <TextView
             android:id="@+id/textViewHeader"
             android:layout_width="wrap_content"
@@ -26,7 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Timer Display Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardTimer"
             android:layout_width="0dp"
@@ -74,7 +72,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Control Buttons -->
         <LinearLayout
             android:id="@+id/layoutControls"
             android:layout_width="0dp"
@@ -100,20 +97,6 @@
                 app:cornerRadius="12dp" />
 
             <Button
-                android:id="@+id/btnPausePomodoro"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="⏸ Pause"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:backgroundTint="@color/colorLeaf"
-                android:textColor="@color/white"
-                app:cornerRadius="12dp" />
-
-            <Button
                 android:id="@+id/btnResetPomodoro"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
@@ -127,102 +110,17 @@
                 app:cornerRadius="12dp" />
         </LinearLayout>
 
-        <!-- User Info Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardUserInfo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@color/colorSurface"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutControls">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Track Your Progress"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextPrimary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Earn points on the leaderboard"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorTextSecondary" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="@color/colorBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Username"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextSecondary" />
-
-                <EditText
-                    android:id="@+id/editTextUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Enter your username"
-                    android:inputType="text"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:background="@color/colorBackground"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Password (optional)"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextSecondary" />
-
-                <EditText
-                    android:id="@+id/editTextPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Enter password"
-                    android:inputType="textPassword"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:background="@color/colorBackground"
-                    android:padding="12dp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Info Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             app:cardBackgroundColor="@color/colorLeaf"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardUserInfo">
+            app:layout_constraintTop_toBottomOf="@+id/layoutControls">
 
             <TextView
                 android:layout_width="match_parent"

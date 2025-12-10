@@ -16,11 +16,11 @@
 
         <ImageView
             android:id="@+id/imageViewLogo"
-            android:layout_width="384dp"
-            android:layout_height="96dp"
+            android:layout_width="426dp"
+            android:layout_height="163dp"
             android:layout_marginTop="16dp"
             android:contentDescription="App Logo"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@mipmap/ic_launcher_foreground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
-        <!-- Feature Buttons Grid -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardPomodoro"
             android:layout_width="0dp"
@@ -297,6 +296,32 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="👤 My Profile"
+            android:backgroundTint="@color/colorLeaf"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardScreenTime" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="32dp"
+            android:text="Logout"
+            android:backgroundTint="@color/colorTomatoDark"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/btnProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
